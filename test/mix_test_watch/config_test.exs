@@ -73,4 +73,18 @@ defmodule MixTestWatch.ConfigTest do
       assert config.cli_executable == "iex -S"
     end
   end
+
+  test "new/1 takes :env from the env" do
+    TemporaryEnv.put :mix_test_watch, :env, :new_env do
+      config = Config.new()
+      assert config.env == :new_env
+    end
+  end
+
+  test ~s(new/1 defaults :env to :test) do
+    TemporaryEnv.delete :mix_test_watch, :env do
+      config = Config.new()
+      assert config.env == :test
+    end
+  end
 end

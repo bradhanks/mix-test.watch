@@ -35,5 +35,15 @@ defmodule MixTestWatch.PortRunnerTest do
 
       assert PortRunner.build_tasks_cmds(config) == expected
     end
+
+    test "take the env argument from passed config" do
+      config = %Config{env: :new_env}
+
+      expected =
+        "MIX_ENV=new_env mix do run -e " <>
+          "'Application.put_env(:elixir, :ansi_enabled, true);', test"
+
+      assert PortRunner.build_tasks_cmds(config) == expected
+    end
   end
 end
