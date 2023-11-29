@@ -10,6 +10,7 @@ defmodule MixTestWatch.Config do
   @default_exclude [~r/\.#/, ~r{priv/repo/migrations}]
   @default_extra_extensions []
   @default_cli_executable "mix"
+  @default_env :test
 
   defstruct tasks: @default_tasks,
             clear: @default_clear,
@@ -18,7 +19,8 @@ defmodule MixTestWatch.Config do
             exclude: @default_exclude,
             extra_extensions: @default_extra_extensions,
             cli_executable: @default_cli_executable,
-            cli_args: []
+            cli_args: [],
+            env: @default_env
 
   @spec new([String.t()]) :: %__MODULE__{}
   @doc """
@@ -33,6 +35,7 @@ defmodule MixTestWatch.Config do
       exclude: get_excluded(),
       cli_executable: get_cli_executable(),
       cli_args: cli_args,
+      env: get_env(),
       extra_extensions: get_extra_extensions()
     }
   end
@@ -59,6 +62,10 @@ defmodule MixTestWatch.Config do
 
   defp get_cli_executable do
     Application.get_env(:mix_test_watch, :cli_executable, @default_cli_executable)
+  end
+
+  defp get_env do
+    Application.get_env(:mix_test_watch, :env, @default_env)
   end
 
   defp get_extra_extensions do

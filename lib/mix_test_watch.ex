@@ -13,7 +13,6 @@ defmodule MixTestWatch do
 
   @spec run([String.t()]) :: no_return
   def run(args \\ []) when is_list(args) do
-    Mix.env(:test)
     put_config(args)
     :ok = Application.ensure_started(:file_system)
     :ok = Application.ensure_started(:mix_test_watch)

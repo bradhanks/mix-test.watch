@@ -10,10 +10,13 @@ defmodule MixTestWatch.PortRunner do
   """
   def run(%Config{} = config) do
     command = build_tasks_cmds(config)
+    env = config.env |> Atom.to_string()
 
     case :os.type() do
       {:win32, _} ->
-        System.cmd("cmd", ["/C", "set MIX_ENV=test&& mix test"], into: IO.stream(:stdio, :line))
+        System.cmd("cmd", ["/C", "set MIX_ENV=#{env} && mix test"],
+          into: IO.stream(:stdio, :line)
+        )
 
       _ ->
         Path.join(:code.priv_dir(:mix_test_watch), "zombie_killer")
@@ -44,10 +47,12 @@ defmodule MixTestWatch.PortRunner do
         false -> "run -e 'Application.put_env(:elixir, :ansi_enabled, true);'"
       end
 
+    env = config.env |> Atom.to_string()
+
     [config.cli_executable, "do", ansi <> ",", task, args]
     |> Enum.filter(& &1)
     |> Enum.join(" ")
-    |> (fn command -> "MIX_ENV=test #{command}" end).()
+    |> (fn command -> "MIX_ENV=#{env} #{command}" end).()
     |> String.trim()
   end
 end
