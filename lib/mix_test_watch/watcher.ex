@@ -30,15 +30,18 @@ defmodule MixTestWatch.Watcher do
 
   def init(_) do
     opts = [dirs: [Path.absname("")], name: :mix_test_watcher]
+    {:ok, opts, {:continue, :load_config}}
+  end
 
-    case FileSystem.start_link(opts) do
+  def handle_continue(:load_config, state) do
+    case FileSystem.start_link(state) do
       {:ok, _} ->
         FileSystem.subscribe(:mix_test_watcher)
-        {:ok, []}
+        {:noreply, []}
 
       other ->
         Logger.warning("Could not start the file system monitor.")
-        other
+        {:stop, other}
     end
   end
 

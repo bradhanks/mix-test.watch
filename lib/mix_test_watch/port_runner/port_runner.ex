@@ -34,7 +34,6 @@ defmodule MixTestWatch.PortRunner do
     config.tasks
     |> Enum.map(&task_command(&1, config))
     |> Enum.join(" && ")
-    |> dbg
   end
 
   defp task_command(task, config) do
